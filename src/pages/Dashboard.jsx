@@ -1,6 +1,8 @@
 import React from 'react';
-import { Title } from '../components/Title/Title';
+import { Title } from 'components/Title/Title';
 import { Box, Grid, Paper } from '@mui/material';
+import { Bars } from 'components/Bars/Bars';
+import { Lines } from 'components/Lines/Lines';
 
 export const Dashboard = (props) => {
   return (
@@ -9,13 +11,17 @@ export const Dashboard = (props) => {
 
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>Bars</Paper>
+          <Paper sx={{ p: 2, height: '360px' }}>
+            <Bars />
+          </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 2 }}>Lines</Paper>
+          <Paper sx={{ p: 2, height: '360px' }}>
+            <Lines />
+          </Paper>
         </Grid>
         <Grid item xs={12} md={12}>
-          <Paper sx={{ p: 2 }}>Table</Paper>
+          <Paper sx={{ p: 2, height: '360px' }}>Table</Paper>
         </Grid>
       </Grid>
     </Box>
