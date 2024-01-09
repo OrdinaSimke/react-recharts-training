@@ -3,6 +3,7 @@ import { Title } from 'components/Title/Title';
 import { Box, Grid, Paper } from '@mui/material';
 import { Bars } from 'components/Bars/Bars';
 import { Lines } from 'components/Lines/Lines';
+import { DataTable } from 'components/DataTable/DataTable';
 
 export const Dashboard = (props) => {
   return (
@@ -21,7 +22,9 @@ export const Dashboard = (props) => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={12}>
-          <Paper sx={{ p: 2, height: '360px' }}>Table</Paper>
+          <Paper sx={{ p: 0, height: '360px' }}>
+            <DataTable />
+          </Paper>
         </Grid>
       </Grid>
     </Box>
