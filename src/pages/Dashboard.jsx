@@ -1,5 +1,5 @@
-import { Title } from '../components/Title/Title';
 import React from 'react';
+import { Title } from '../components/Title/Title';
 
 export const Dashboard = (props) => {
   return (

@@ -10,7 +10,11 @@ export const Title = (props) => {
 
   return (
     <h1
-      style={{ textAlign: 'center', color: isBlue ? 'blue' : 'red' }}
+      style={{
+        textAlign: 'center',
+        cursor: 'pointer',
+        color: isBlue ? 'blue' : 'red',
+      }}
       onClick={updateTitle}
     >
       {value}
