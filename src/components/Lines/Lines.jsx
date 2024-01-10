@@ -1,8 +1,9 @@
-import { data } from 'data/data';
 import React, { useState } from 'react';
 import { Line, LineChart, ResponsiveContainer } from 'recharts';
 
 export const Lines = (props) => {
+  const { data } = props;
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data}>
