@@ -6,6 +6,7 @@ import { Lines } from 'components/Lines/Lines';
 import { DataTable } from 'components/DataTable/DataTable';
 
 import { data } from 'data/data';
+import TemporaryDrawer from 'components/Drawer/TemporaryDrawer';
 
 export const Dashboard = (props) => {
   const [myData, setMyData] = useState([]);
@@ -26,10 +27,16 @@ export const Dashboard = (props) => {
     <Box sx={{ width: '100%', p: 2 }}>
       <Title value="My title (click me)"></Title>
 
+      <TemporaryDrawer />
+
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 2, height: '360px' }}>
-            <Bars data={myData} />
+            <Bars
+              data={structuredClone(myData).sort(function (a, b) {
+                return b.uv - a.uv;
+              })}
+            />
           </Paper>
         </Grid>
         <Grid item xs={12} md={6}>
