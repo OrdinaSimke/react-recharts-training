@@ -1,14 +1,24 @@
-import { DataGrid } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridToolbar,
+  getGridNumericOperators,
+} from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
 import { CellBar } from './CellBar';
 import { Box } from '@mui/material';
+import { useData } from 'contexts/useData';
 
 export const DataTable = (props) => {
   const { data } = props;
+  const { selectedItem } = useData();
   const [columns, setColumns] = useState([]);
+  const [tableFilters, setTableFilters] = useState({
+    items: [{}],
+  });
 
   useEffect(() => {
     const cols = [
+      { field: 'id', headerName: 'id', width: 150, type: 'number' },
       { field: 'name', headerName: 'Name', width: 150 },
       { field: 'uv', headerName: 'UV value', width: 100 },
       { field: 'max', headerName: 'max value', width: 100 },
@@ -38,5 +48,35 @@ export const DataTable = (props) => {
     setColumns(cols);
   }, []);
 
-  return <DataGrid rows={data} columns={columns} />;
+  useEffect(() => {
+    // https://mui.com/x/react-data-grid/filtering/customization/
+    // console.log(getGridNumericOperators());
+
+    if (selectedItem !== null) {
+      setTableFilters({
+        items: [{ field: 'id', operator: '=', value: selectedItem }],
+      });
+    } else {
+      setTableFilters({
+        items: [{}],
+      });
+    }
+  }, [selectedItem]);
+
+  return (
+    <DataGrid
+      rows={data}
+      columns={columns}
+      // @ts-ignore
+      filterModel={tableFilters}
+      onFilterModelChange={(newFilterModel) => setTableFilters(newFilterModel)}
+      initialState={{
+        columns: {
+          columnVisibilityModel: {
+            id: false,
+          },
+        },
+      }}
+    />
+  );
 };

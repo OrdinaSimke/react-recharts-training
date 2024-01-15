@@ -1,10 +1,9 @@
-import { colors } from '@mui/material';
-import React, { useState } from 'react';
+import { useData } from 'contexts/useData';
+import React from 'react';
 import {
   Bar,
   BarChart,
   Cell,
-  Label,
   LabelList,
   ResponsiveContainer,
   XAxis,
@@ -13,10 +12,14 @@ import {
 
 export const Bars = (props) => {
   const { data } = props;
-  const [activeIndex, setActiveIndex] = useState();
+  const { selectedItem, setSelectedItem } = useData();
 
   const handleClick = (d, i, e) => {
-    setActiveIndex(i);
+    if (selectedItem === d.id) {
+      setSelectedItem(null);
+    } else {
+      setSelectedItem(d.id);
+    }
   };
 
   const renderCustomizedLabel = (props) => {
@@ -48,7 +51,7 @@ export const Bars = (props) => {
           {data.map((d, i) => (
             <Cell
               cursor="pointer"
-              fill={i === activeIndex ? '#82ca9d' : '#8884d8'}
+              fill={d.id === selectedItem ? '#82ca9d' : '#8884d8'}
               key={`cell-${i}`}
             />
           ))}
