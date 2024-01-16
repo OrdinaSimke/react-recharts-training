@@ -20,7 +20,7 @@ import ResponsiveDrawer from 'components/Drawer/ResponsiveDrawer';
 import { useData } from 'contexts/useData';
 
 export const Dashboard = (props) => {
-  const { drawerWidth } = useData();
+  const { drawerWidth, navbarHeight } = useData();
 
   let container = useRef(null);
 
@@ -61,6 +61,28 @@ export const Dashboard = (props) => {
 
   return (
     <>
+      <AppBar
+        color="secondary"
+        sx={{
+          position: 'sticky',
+          zIndex: 10000,
+        }}
+      >
+        <Toolbar sx={{ height: navbarHeight }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            Header bar
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Box sx={{ height: '500px', bgcolor: '#3476aa' }}></Box>
       <Box ref={container}>
         <ResponsiveDrawer
@@ -84,6 +106,7 @@ export const Dashboard = (props) => {
           <AppBar
             sx={{
               position: 'sticky',
+              top: navbarHeight,
             }}
           >
             <Toolbar>
@@ -97,7 +120,7 @@ export const Dashboard = (props) => {
                 <MenuIcon />
               </IconButton>
               <Typography variant="h6" noWrap component="div">
-                Responsive drawer
+                Filter bar
               </Typography>
             </Toolbar>
           </AppBar>
