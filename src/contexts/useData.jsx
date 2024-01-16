@@ -4,7 +4,7 @@ import { createContext, useContext, useState } from 'react';
 const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
-  const [selectedItem, setSelectedItem] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const drawerWidth = 240;
   const navbarHeight = 44;
 
