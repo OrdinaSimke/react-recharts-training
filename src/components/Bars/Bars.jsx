@@ -51,7 +51,7 @@ export const Bars = (props) => {
           fill="#8884d8"
           onClick={handleClick}
           barSize={22}
-          isAnimationActive={true}
+          isAnimationActive={false}
         >
           <LabelList dataKey="uv" content={renderCustomizedLabel} />
           {data.map((d, i) => (
