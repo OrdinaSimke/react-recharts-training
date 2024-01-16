@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 export const Title = (props) => {
-  const { value } = props;
+  const { value, style } = props;
 
   return (
     <Typography
@@ -14,6 +14,7 @@ export const Title = (props) => {
         // color: '#335',
         color: 'text.primary',
       }}
+      style={style}
     >
       {value}
     </Typography>

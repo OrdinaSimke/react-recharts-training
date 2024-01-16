@@ -6,7 +6,7 @@ const DataContext = createContext(null);
 export const DataProvider = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState([]);
   const drawerWidth = 240;
-  const navbarHeight = 64;
+  const navbarHeight = 44;
 
   const api = {
     selectedItem,

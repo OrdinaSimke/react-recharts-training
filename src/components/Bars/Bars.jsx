@@ -46,7 +46,13 @@ export const Bars = (props) => {
       <BarChart layout="vertical" data={data}>
         <XAxis type="number" hide />
         <YAxis dataKey="name" type="category" />
-        <Bar dataKey="uv" fill="#8884d8" onClick={handleClick}>
+        <Bar
+          dataKey="uv"
+          fill="#8884d8"
+          onClick={handleClick}
+          barSize={22}
+          isAnimationActive={true}
+        >
           <LabelList dataKey="uv" content={renderCustomizedLabel} />
           {data.map((d, i) => (
             <Cell

@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 
 import { useData } from 'contexts/useData';
+import { Typography } from '@mui/material';
 
 // IMPORTANT: Add following code in the component where you call the drawer, before the return:
 {
@@ -61,6 +62,13 @@ function ResponsiveDrawer(props) {
   const drawer = (
     <div style={{ position: 'sticky', top: navbarHeight }}>
       <Divider />
+
+      <ListItem key={'navbar'}>
+        <Typography variant="h6" noWrap component="div">
+          Navbar{' '}
+        </Typography>
+      </ListItem>
+
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -112,11 +120,13 @@ function ResponsiveDrawer(props) {
         display: { xs: 'none', sm: 'block' },
         position: 'absolute',
         height: divHeight,
+
         '& .MuiDrawer-paper': {
           position: 'absolute',
           boxSizing: 'border-box',
           width: drawerWidth,
           overflow: 'clip',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
         },
       }}
       open
