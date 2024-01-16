@@ -5,10 +5,12 @@ const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState([]);
+  const drawerWidth = 240;
 
   const api = {
     selectedItem,
     setSelectedItem,
+    drawerWidth,
   };
   return <DataContext.Provider value={api}>{children}</DataContext.Provider>;
 };

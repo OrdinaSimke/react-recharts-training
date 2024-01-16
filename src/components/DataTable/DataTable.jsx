@@ -18,14 +18,14 @@ export const DataTable = (props) => {
 
   useEffect(() => {
     const cols = [
-      { field: 'id', headerName: 'id', width: 150, type: 'number' },
-      { field: 'name', headerName: 'Name', width: 150 },
+      { field: 'id', headerName: 'id', width: 100, type: 'number' },
+      { field: 'name', headerName: 'Name', width: 100 },
       { field: 'uv', headerName: 'UV value', width: 100 },
       { field: 'max', headerName: 'max value', width: 100 },
       {
         headerName: 'bar',
         flex: 1,
-        minWidth: 150,
+        minWidth: 50,
         sortable: false,
         filterable: false,
         renderCell: (row) => {

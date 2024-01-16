@@ -1,23 +1,21 @@
+import { Typography } from '@mui/material';
 import React, { useState } from 'react';
 
 export const Title = (props) => {
   const { value } = props;
-  const [isBlue, setIsBlue] = useState(false);
-
-  const updateTitle = () => {
-    setIsBlue(!isBlue);
-  };
 
   return (
-    <h1
-      style={{
+    <Typography
+      variant="h2"
+      gutterBottom
+      sx={{
         textAlign: 'center',
-        cursor: 'pointer',
-        color: isBlue ? 'blue' : 'red',
+        fontWeight: 700,
+        // color: '#335',
+        color: 'text.primary',
       }}
-      onClick={updateTitle}
     >
       {value}
-    </h1>
+    </Typography>
   );
 };
