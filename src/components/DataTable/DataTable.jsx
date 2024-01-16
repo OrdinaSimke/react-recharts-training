@@ -12,9 +12,10 @@ export const DataTable = (props) => {
   const { data } = props;
   const { selectedItem } = useData();
   const [columns, setColumns] = useState([]);
-  const [tableFilters, setTableFilters] = useState({
-    items: [{}],
-  });
+  const [tableData, setTableData] = useState(data);
+  // const [tableFilters, setTableFilters] = useState({
+  //   items: [{}],
+  // });
 
   useEffect(() => {
     const cols = [
@@ -48,28 +49,42 @@ export const DataTable = (props) => {
     setColumns(cols);
   }, []);
 
-  useEffect(() => {
-    // https://mui.com/x/react-data-grid/filtering/customization/
-    // console.log(getGridNumericOperators());
+  // useEffect(() => {
+  //   // https://mui.com/x/react-data-grid/filtering/customization/
+  //   // console.log(getGridNumericOperators());
 
+  //   if (selectedItem !== null) {
+  //     setTableFilters({
+  //       items: [{ field: 'id', operator: '=', value: selectedItem }],
+  //     });
+  //   } else {
+  //     setTableFilters({
+  //       items: [{}],
+  //     });
+  //   }
+  // }, [selectedItem]);
+
+  useEffect(() => {
     if (selectedItem !== null) {
-      setTableFilters({
-        items: [{ field: 'id', operator: '=', value: selectedItem }],
-      });
+      const tmp = data.filter((d) => d.id === selectedItem);
+      setTableData(tmp);
     } else {
-      setTableFilters({
-        items: [{}],
-      });
+      setTableData(data);
     }
-  }, [selectedItem]);
+  }, [data, selectedItem]);
 
   return (
     <DataGrid
-      rows={data}
+      rows={tableData}
       columns={columns}
-      // @ts-ignore
-      filterModel={tableFilters}
-      onFilterModelChange={(newFilterModel) => setTableFilters(newFilterModel)}
+      // filterModel={tableFilters}
+      // onFilterModelChange={(newFilterModel) => setTableFilters(newFilterModel)}
+      slots={{ toolbar: GridToolbar }}
+      slotProps={{
+        toolbar: {
+          showQuickFilter: true,
+        },
+      }}
       initialState={{
         columns: {
           columnVisibilityModel: {
