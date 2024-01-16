@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Title } from 'components/Title/Title';
 import { Box, Grid, Paper, Toolbar, Typography } from '@mui/material';
 
@@ -13,6 +13,10 @@ import { useData } from 'contexts/useData';
 export const Dashboard = (props) => {
   const { drawerWidth } = useData();
   const [myData, setMyData] = useState([]);
+  let container = useRef(null);
+
+  let [height, setHeight] = useState(null);
+  useLayoutEffect(() => setHeight(container.current.offsetHeight), []);
 
   const randomNumberInRange = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -28,11 +32,13 @@ export const Dashboard = (props) => {
 
   return (
     <>
-      <Box>
-        <ResponsiveDrawer />
+      <Box sx={{ height: '500px', bgcolor: '#3476aa' }}></Box>
+      <Box ref={container}>
+        <ResponsiveDrawer fullScreen={false} divHeight={height} />
 
         <Box
           component="main"
+          id="main"
           sx={{
             flexGrow: 1,
             p: 3,
@@ -99,6 +105,7 @@ export const Dashboard = (props) => {
           </Grid>
         </Box>
       </Box>
+      <Box sx={{ height: '500px', bgcolor: '#3476aa' }}></Box>
     </>
   );
 };

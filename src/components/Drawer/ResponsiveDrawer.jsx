@@ -20,9 +20,9 @@ import Typography from '@mui/material/Typography';
 import { useData } from 'contexts/useData';
 
 function ResponsiveDrawer(props) {
+  const { fullScreen, divHeight } = props;
   const { drawerWidth } = useData();
 
-  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -72,9 +72,40 @@ function ResponsiveDrawer(props) {
     </div>
   );
 
-  // Remove this const when copying and pasting into your project.
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
+  const drawerFullScreen = (
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: 'none', sm: 'block' },
+        '& .MuiDrawer-paper': {
+          boxSizing: 'border-box',
+          width: drawerWidth,
+        },
+      }}
+      open
+    >
+      {drawer}
+    </Drawer>
+  );
+
+  const drawerInDiv = (
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: 'none', sm: 'block' },
+        position: 'absolute',
+        height: divHeight,
+        '& .MuiDrawer-paper': {
+          position: 'absolute',
+          boxSizing: 'border-box',
+          width: drawerWidth,
+        },
+      }}
+      open
+    >
+      {drawer}
+    </Drawer>
+  );
 
   return (
     <>
@@ -105,9 +136,8 @@ function ResponsiveDrawer(props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
-          container={container}
+          // container={container}
           variant="temporary"
           open={mobileOpen}
           onTransitionEnd={handleDrawerTransitionEnd}
@@ -125,19 +155,8 @@ function ResponsiveDrawer(props) {
         >
           {drawer}
         </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': {
-              boxSizing: 'border-box',
-              width: drawerWidth,
-            },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
+
+        {fullScreen ? drawerFullScreen : drawerInDiv}
       </Box>
     </>
   );
