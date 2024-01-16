@@ -18,31 +18,54 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
 import { useData } from 'contexts/useData';
+// IMPORTANT: Add following code in the component where you call the drawer, before the return:
+{
+  // const [mobileOpen, setMobileOpen] = React.useState(false);
+  //   const [isClosing, setIsClosing] = React.useState(false);
+  //   const handleDrawerClose = () => {
+  //     setIsClosing(true);
+  //     setMobileOpen(false);
+  //   };
+  //   const handleDrawerTransitionEnd = () => {
+  //     setIsClosing(false);
+  //   };
+  //   const handleDrawerToggle = () => {
+  //     if (!isClosing) {
+  //       setMobileOpen(!mobileOpen);
+  //     }
+  //   };
+}
+
+// IMPORTANT: Add a main box below the drawer in the component where you call drawer, example below:
+{
+  /* <Box
+component="main"
+id="main"
+sx={{
+  flexGrow: 1,
+  p: 3,
+  marginLeft: { sm: drawerWidth + 'px' },
+  width: { sm: `calc(100% - ${drawerWidth}px)` },
+}}
+>
+<Toolbar />
+<INSERT_YOUR_CONTENT_HERE />
+</Box> */
+}
 
 function ResponsiveDrawer(props) {
-  const { fullScreen, divHeight } = props;
+  const {
+    fullScreen,
+    divHeight,
+    mobileOpen,
+    handleDrawerClose,
+    handleDrawerTransitionEnd,
+  } = props;
+
   const { drawerWidth } = useData();
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setMobileOpen(!mobileOpen);
-    }
-  };
-
   const drawer = (
-    <div>
+    <div style={{ position: 'sticky', top: 0 }}>
       <Divider />
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -99,6 +122,7 @@ function ResponsiveDrawer(props) {
           position: 'absolute',
           boxSizing: 'border-box',
           width: drawerWidth,
+          overflow: 'clip',
         },
       }}
       open
@@ -108,29 +132,7 @@ function ResponsiveDrawer(props) {
   );
 
   return (
-    <>
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <div>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -158,7 +160,7 @@ function ResponsiveDrawer(props) {
 
         {fullScreen ? drawerFullScreen : drawerInDiv}
       </Box>
-    </>
+    </div>
   );
 }
 
