@@ -3,32 +3,47 @@ import { Title } from 'components/Title/Title';
 import {
   AppBar,
   Box,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Toolbar,
   Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { Bars } from 'components/Bars/Bars';
-import { Lines } from 'components/Lines/Lines';
 import { DataTable } from 'components/DataTable/DataTable';
 
-import { data } from 'data/data';
 import ResponsiveDrawer from 'components/Drawer/ResponsiveDrawer';
 import { useData } from 'contexts/useData';
+import useSWR from 'swr';
 
 export const Dashboard = (props) => {
   const { drawerWidth, navbarHeight } = useData();
-
+  const [allData, setAllData] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const [barData, setBarData] = useState([]);
+  const [height, setHeight] = useState(null);
+  const [completed, setCompleted] = React.useState('All');
+  const [completedValues, setCompletedValues] = React.useState([]);
   let container = useRef(null);
 
-  let [height, setHeight] = useState(null);
-  useLayoutEffect(() => setHeight(container.current.clientHeight), []);
+  const fetcher = (url) => fetch(url).then((res) => res.json());
+  const swrOptions = {};
 
-  const [myData, setMyData] = useState([]);
+  const { data: todoData } = useSWR(
+    `https://jsonplaceholder.typicode.com/todos`,
+    fetcher,
+    swrOptions
+  );
 
+  useLayoutEffect(() => setHeight(container.current.clientHeight), [todoData]);
+
+  // Drawer
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -46,18 +61,81 @@ export const Dashboard = (props) => {
       setMobileOpen(!mobileOpen);
     }
   };
+  // End Drawer
 
-  const randomNumberInRange = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  function pickRandomCell(data) {
+    return data[Math.floor(Math.random() * data.length)];
+  }
+
+  useEffect(() => {
+    if (todoData) {
+      // Take a random sample
+      let sampleData = [];
+      for (let i = 0; i < 120; i++) {
+        sampleData.push(pickRandomCell(todoData));
+      }
+
+      const jsonObject = sampleData.map(JSON.stringify);
+      const uniqueSet = new Set(jsonObject);
+      const uniqueArray = Array.from(uniqueSet).map(JSON.parse);
+
+      const sortedArray = uniqueArray.sort((a, b) => a.userId - b.userId);
+      setAllData(sortedArray);
+      setTableData(sortedArray);
+      setBarData(getBarData(sortedArray));
+
+      // Get list of values for completed dropdown
+      let values = ['All'].concat([
+        ...new Set(sortedArray.map((d) => d.completed.toString())),
+      ]);
+      console.log('completedValues', completedValues);
+      setCompletedValues(values);
+    }
+  }, [todoData]);
+
+  const getBarData = (data) => {
+    // Group by userId and count for the barchart
+    let groupedData = data.reduce(
+      (m, x) => ({ ...m, [x.userId]: (m[x.userId] || 0) + 1 }),
+      {}
+    );
+
+    // Make array of objects
+    groupedData = Object.keys(groupedData).map((key) => {
+      return { userId: key, count: groupedData[key] };
+    });
+
+    groupedData.sort((a, b) => b.count - a.count);
+    return groupedData;
   };
 
   useEffect(() => {
-    const newData = data.map((d) => {
-      d.max = randomNumberInRange(d.uv, d.uv * 5);
-      return d;
-    });
-    setMyData(newData);
-  }, []);
+    console.log('completed', completed);
+    if (completed === 'All') {
+      setTableData(allData);
+      setBarData(getBarData(allData));
+    } else {
+      const filteredData = allData.filter(
+        (d) => d.completed.toString() === completed
+      );
+      setTableData(filteredData);
+      setBarData(getBarData(filteredData));
+    }
+  }, [completed, allData]);
+
+  let bars;
+  let dataTable;
+  if (todoData) {
+    bars = <Bars data={barData} />;
+    dataTable = <DataTable data={tableData} />;
+  } else {
+    bars = <div>Data loading</div>;
+    dataTable = <div>Data loading</div>;
+  }
+
+  const handleCompletedChange = (event) => {
+    setCompleted(event.target.value);
+  };
 
   return (
     <>
@@ -145,15 +223,16 @@ export const Dashboard = (props) => {
               color: '#333',
               position: 'sticky',
               top: navbarHeight,
-              minHeight: `48px !important`,
-              height: 48,
+              minHeight: `64px !important`,
+              height: 64,
             }}
           >
             <Toolbar
-              sx={{
-                minHeight: `48px !important`,
-                height: 48,
-              }}
+            // //Enable below if your toolbar extends appbar
+            // sx={{
+            //   minHeight: `48px !important`,
+            //   height: 48,
+            // }}
             >
               <IconButton
                 color="inherit"
@@ -167,44 +246,58 @@ export const Dashboard = (props) => {
               <Typography variant="h6" noWrap component="div">
                 Filter bar
               </Typography>
+              <FormControl sx={{ m: 3, minWidth: 200 }} size="small">
+                <InputLabel id="demo-simple-select-label">
+                  Completed?
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="completed-select"
+                  value={completed}
+                  label="Completed?"
+                  onChange={handleCompletedChange}
+                >
+                  {completedValues.map((d) => {
+                    return <MenuItem value={d}>{d}</MenuItem>;
+                  })}
+                </Select>
+              </FormControl>
             </Toolbar>
           </AppBar>
 
           <Box sx={{ p: 3, pt: 6 }}>
             <Grid container spacing={6}>
               <Grid item xs={12} md={6}>
-                <Typography variant="h6" noWrap component="div">
-                  barchart title
+                <Typography variant="subtitle2">
+                  Click on a bar to filter the table below
                 </Typography>
-                <Paper sx={{ p: 2, height: '360px' }}>
-                  <Bars
-                    data={structuredClone(myData).sort(function (a, b) {
-                      return b.uv - a.uv;
-                    })}
-                  />
+                <Paper elevation={0} sx={{ p: 2, height: '260px' }}>
+                  {bars}
                 </Paper>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Typography variant="h6" noWrap component="div">
-                  linechart title
+                <Typography variant="subtitle2">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                  blanditiis tenetur
                 </Typography>
-                <Paper sx={{ p: 2, height: '360px' }}>
-                  <Lines data={myData} />
+                <Paper elevation={0} sx={{ p: 2, height: '260px' }}>
+                  {/* {lines} */}
                 </Paper>
               </Grid>
               <Grid item xs={12} md={12}>
-                <Typography variant="h6" noWrap component="div">
-                  datatable title
+                <Typography variant="subtitle2" gutterBottom>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
+                  blanditiis tenetur
                 </Typography>
-                <Paper sx={{ p: 0, height: '360px' }}>
-                  <DataTable data={myData} />
+                <Paper elevation={0} sx={{ p: 0, height: '360px' }}>
+                  {dataTable}
                 </Paper>
               </Grid>
             </Grid>
           </Box>
         </Box>
       </Box>
-
+      )
       <Box sx={{ p: 3 }}>
         <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

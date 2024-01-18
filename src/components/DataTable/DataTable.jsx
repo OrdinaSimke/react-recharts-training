@@ -1,72 +1,79 @@
-import {
-  DataGrid,
-  GridToolbar,
-  getGridNumericOperators,
-} from '@mui/x-data-grid';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import React, { useEffect, useState } from 'react';
-import { CellBar } from './CellBar';
-import { Box } from '@mui/material';
 import { useData } from 'contexts/useData';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 export const DataTable = (props) => {
   const { data } = props;
   const { selectedItem } = useData();
   const [columns, setColumns] = useState([]);
   const [tableData, setTableData] = useState(data);
-  // const [tableFilters, setTableFilters] = useState({
-  //   items: [{}],
-  // });
 
   useEffect(() => {
     const cols = [
-      { field: 'id', headerName: 'id', width: 100, type: 'number' },
-      { field: 'name', headerName: 'Name', width: 100 },
-      { field: 'uv', headerName: 'UV value', width: 100 },
-      { field: 'max', headerName: 'max value', width: 100 },
       {
-        headerName: 'bar',
-        flex: 1,
-        minWidth: 50,
-        sortable: false,
+        field: 'id',
+        headerName: 'id',
+        width: 100,
+        type: 'number',
         filterable: false,
-        renderCell: (row) => {
-          const newRow = [
-            {
-              ...row.row,
-              value: row.row.uv / row.row.max,
-            },
-          ];
+      },
+      { field: 'userId', headerName: 'userId', width: 100 },
 
-          return (
-            <Box sx={{ width: '100%', height: '50px' }}>
-              <CellBar data={newRow}></CellBar>
-            </Box>
+      { field: 'title', headerName: 'title', flex: 1, minWidth: 50 },
+      {
+        field: 'completed',
+        headerName: 'completed',
+        width: 100,
+        type: 'boolean',
+        renderCell: (params) => {
+          return params.value ? (
+            <CheckBoxIcon
+              style={{
+                color: 'green',
+              }}
+            />
+          ) : (
+            <CheckBoxOutlineBlankIcon
+              style={{
+                color: 'grey',
+              }}
+            />
           );
         },
       },
+      // {
+      //   headerName: 'bar',
+      //   flex: 1,
+      //   minWidth: 50,
+      //   sortable: false,
+      //   filterable: false,
+      //   renderCell: (row) => {
+      //     const newRow = [
+      //       {
+      //         ...row.row,
+      //         value: row.row.uv / row.row.max,
+      //       },
+      //     ];
+
+      //     return (
+      //       <Box sx={{ width: '100%', height: '50px' }}>
+      //         <CellBar data={newRow}></CellBar>
+      //       </Box>
+      //     );
+      //   },
+      // },
     ];
 
     setColumns(cols);
   }, []);
 
-  // useEffect(() => {
-  //   // https://mui.com/x/react-data-grid/filtering/customization/
-  //   // console.log(getGridNumericOperators());
-
-  //   if (selectedItem !== null) {
-  //     setTableFilters({
-  //       items: [{ field: 'id', operator: '=', value: selectedItem }],
-  //     });
-  //   } else {
-  //     setTableFilters({
-  //       items: [{}],
-  //     });
-  //   }
-  // }, [selectedItem]);
-
   useEffect(() => {
     if (selectedItem !== null) {
-      const tmp = data.filter((d) => d.id === selectedItem);
+      const tmp = data.filter(
+        (d) => parseInt(d.userId) === parseInt(selectedItem)
+      );
       setTableData(tmp);
     } else {
       setTableData(data);
@@ -77,8 +84,7 @@ export const DataTable = (props) => {
     <DataGrid
       rows={tableData}
       columns={columns}
-      // filterModel={tableFilters}
-      // onFilterModelChange={(newFilterModel) => setTableFilters(newFilterModel)}
+      loading={tableData.length === 0}
       slots={{ toolbar: GridToolbar }}
       slotProps={{
         toolbar: {

@@ -15,10 +15,10 @@ export const Bars = (props) => {
   const { selectedItem, setSelectedItem } = useData();
 
   const handleClick = (d, i, e) => {
-    if (selectedItem === d.id) {
+    if (selectedItem === d.userId) {
       setSelectedItem(null);
     } else {
-      setSelectedItem(d.id);
+      setSelectedItem(d.userId);
     }
   };
 
@@ -43,21 +43,31 @@ export const Bars = (props) => {
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <BarChart layout="vertical" data={data}>
+      <BarChart
+        layout="vertical"
+        data={data}
+        margin={{
+          top: 0,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
         <XAxis type="number" hide />
-        <YAxis dataKey="name" type="category" />
+        <YAxis dataKey="userId" type="category" interval={0} />
         <Bar
-          dataKey="uv"
+          dataKey="count"
           fill="#8884d8"
           onClick={handleClick}
-          barSize={22}
+          barSize={16}
           isAnimationActive={false}
         >
-          <LabelList dataKey="uv" content={renderCustomizedLabel} />
+          <LabelList dataKey="count" position={'right'} />
+          {/* <LabelList dataKey="count" content={renderCustomizedLabel} /> */}
           {data.map((d, i) => (
             <Cell
               cursor="pointer"
-              fill={d.id === selectedItem ? '#82ca9d' : '#8884d8'}
+              fill={d.userId === selectedItem ? '#82ca9d' : '#8884d8'}
               key={`cell-${i}`}
             />
           ))}
