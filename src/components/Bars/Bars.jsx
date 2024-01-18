@@ -14,7 +14,7 @@ import * as d3 from 'd3';
 export const Bars = (props) => {
   const { data } = props;
   const { selectedItem, setSelectedItem } = useData();
-  const myColor = d3.scaleLinear().domain([5, 20]).range(['#ddd', '#303099']);
+  const myColor = d3.scaleLinear().domain([0, 20]).range(['#ddd', '#303099']);
 
   const handleClick = (d, i, e) => {
     if (selectedItem === d.userId) {
