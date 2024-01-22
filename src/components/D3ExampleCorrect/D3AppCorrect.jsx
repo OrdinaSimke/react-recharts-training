@@ -23,6 +23,7 @@ export default function App() {
 
   useEffect(() => {
     chartRef.current.setMarker(marker);
+    chartRef.current.setColor(marker);
   }, [marker]);
 
   useEffect(() => {

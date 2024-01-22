@@ -34,6 +34,17 @@ const LineChart = forwardRef(({ data, width, height }, ref) => {
         .attr('x2', xScale(value))
         .attr('y2', 0);
     },
+
+    setColor: (value) => {
+      if (isNaN(value)) {
+        return;
+      }
+      const sel = svg.selectAll('circle');
+
+      sel.style('fill', (d) => {
+        return d[0] <= value ? '#333333' : '#CC0000';
+      });
+    },
   }));
 
   const renderSvg = () => {
@@ -55,22 +66,6 @@ const LineChart = forwardRef(({ data, width, height }, ref) => {
 
     g.append('g').call(d3.axisLeft(yScale));
 
-    svg
-      .append('g')
-      .selectAll('dot')
-      .data(data)
-      .enter()
-      .append('circle')
-      .attr('cx', function (d) {
-        return xScale(d[0]);
-      })
-      .attr('cy', function (d) {
-        return yScale(d[1]);
-      })
-      .attr('r', 3)
-      .attr('transform', transform)
-      .style('fill', '#CC0000');
-
     const line = d3
       .line()
       .x(function (d) {
@@ -90,6 +85,22 @@ const LineChart = forwardRef(({ data, width, height }, ref) => {
       .style('fill', 'none')
       .style('stroke', '#CC0000')
       .style('stroke-width', '2');
+
+    svg
+      .append('g')
+      .selectAll('dot')
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('cx', function (d) {
+        return xScale(d[0]);
+      })
+      .attr('cy', function (d) {
+        return yScale(d[1]);
+      })
+      .attr('r', 3)
+      .attr('transform', transform)
+      .style('fill', '#CC0000');
   };
 
   /* global renders2:writable */
