@@ -1,5 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Box, Grid, Paper, Typography } from '@mui/material';
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Box, Grid, Paper, Typography, useTheme } from '@mui/material';
 import { Bars } from 'components/Bars/Bars';
 import { DataTable } from 'components/DataTable/DataTable';
 import ResponsiveDrawer from 'components/Drawer/ResponsiveDrawer';
@@ -17,6 +23,8 @@ export const Dashboard = (props) => {
   const [height, setHeight] = useState(null);
   const [completed, setCompleted] = React.useState('All');
   const [completedValues, setCompletedValues] = React.useState([]);
+
+  const theme = useTheme();
 
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const swrOptions = {};
@@ -73,20 +81,6 @@ export const Dashboard = (props) => {
     return groupedData;
   };
 
-  const getRandomSampleFromData = (data) => {
-    let sampleData = [];
-    for (let i = 0; i < 120; i++) {
-      sampleData.push(pickRandomCell(data));
-    }
-
-    const jsonObject = sampleData.map(JSON.stringify);
-    const uniqueSet = new Set(jsonObject);
-    const uniqueArray = Array.from(uniqueSet).map(JSON.parse);
-
-    const sortedArray = uniqueArray.sort((a, b) => a.userId - b.userId);
-    return sortedArray;
-  };
-
   const getValuesForCompletedDropdown = (data, field) => {
     const values = ['All'].concat([
       ...new Set(data.map((d) => d[field].toString())),
@@ -95,20 +89,44 @@ export const Dashboard = (props) => {
     return values;
   };
 
-  useEffect(() => {
+  const randomSampleFromData = useMemo(() => {
+    // useMemo because it is a heavier calculation (possibly)
+    // Unlike useEffect, React.useMemo does not trigger every time you change one of its dependencies.
+
+    // A memoized function will first check to see if the dependencies have changed since the last render.
+    // If so, it executes the function and returns the result.
+    // If false, it simply returns the cached result from the last execution.
+
     if (todoData) {
-      // Take a random sample
-      const sample = getRandomSampleFromData(todoData);
-      setAllData(sample);
-      setTableData(sample);
-      setBarData(getBarData(sample));
+      let sampleData = [];
+      for (let i = 0; i < 120; i++) {
+        sampleData.push(pickRandomCell(todoData));
+      }
 
-      // Get list of values for populating the 'completed' dropdown
+      const jsonObject = sampleData.map(JSON.stringify);
+      const uniqueSet = new Set(jsonObject);
+      const uniqueArray = Array.from(uniqueSet).map(JSON.parse);
 
-      const values = getValuesForCompletedDropdown(sample, 'completed');
-      setCompletedValues(values);
+      const sortedArray = uniqueArray.sort((a, b) => a.userId - b.userId);
+      return sortedArray;
     }
   }, [todoData]);
+
+  useEffect(() => {
+    // Do this only when our source data changes
+    if (randomSampleFromData) {
+      setAllData(randomSampleFromData);
+      setTableData(randomSampleFromData);
+      setBarData(getBarData(randomSampleFromData));
+
+      // Get list of values for populating the 'completed' dropdown
+      const values = getValuesForCompletedDropdown(
+        randomSampleFromData,
+        'completed'
+      );
+      setCompletedValues(values);
+    }
+  }, [randomSampleFromData]);
 
   useEffect(() => {
     if (completed === 'All') {
@@ -157,8 +175,8 @@ export const Dashboard = (props) => {
             p: 0,
             marginLeft: { sm: drawerWidth + 'px' },
             width: { sm: `calc(100% - ${drawerWidth}px)` },
-            borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-            borderTop: '1px solid rgba(0, 0, 0, 0.12)',
+            borderBottom: '1px solid ' + theme.palette.divider,
+            borderTop: '1px solid ' + theme.palette.divider,
           }}
         >
           <TopFilterBar

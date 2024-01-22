@@ -11,7 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MailIcon from '@mui/icons-material/Mail';
 
 import { useData } from 'contexts/useData';
-import { Typography } from '@mui/material';
+import { Typography, useTheme } from '@mui/material';
 
 // IMPORTANT: Add following code in the component where you call the drawer, before the return:
 {
@@ -56,6 +56,8 @@ function ResponsiveDrawer(props) {
     handleDrawerClose,
     handleDrawerTransitionEnd,
   } = props;
+
+  const theme = useTheme();
 
   const { drawerWidth, navbarHeight } = useData();
 
@@ -126,7 +128,7 @@ function ResponsiveDrawer(props) {
           boxSizing: 'border-box',
           width: drawerWidth,
           overflow: 'clip',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
+          borderBottom: '1px solid ' + theme.palette.divider,
         },
       }}
       open
