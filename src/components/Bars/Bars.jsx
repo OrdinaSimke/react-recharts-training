@@ -16,7 +16,7 @@ import { useTheme } from '@mui/material';
 export const Bars = (props) => {
   const theme = useTheme();
   const { data } = props;
-  const { selectedItem, setSelectedItem } = useData();
+  const { locale, selectedItem, setSelectedItem } = useData();
   const myColor = d3
     .scaleLinear()
     .domain([0, 20])
@@ -72,7 +72,11 @@ export const Bars = (props) => {
           barSize={16}
           isAnimationActive={false}
         >
-          <LabelList dataKey="count" position={'right'} />
+          <LabelList
+            dataKey="count"
+            position={'right'}
+            formatter={(value) => locale.format('.1f')(value)}
+          />
           {data.map((d, i) => (
             <Cell
               cursor="pointer"
