@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useData } from 'contexts/useData';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import { useTheme } from '@mui/material';
 
 export const DataTable = (props) => {
   const { data } = props;
   const { selectedItem } = useData();
   const [columns, setColumns] = useState([]);
   const [tableData, setTableData] = useState(data);
+  const theme = useTheme();
 
   useEffect(() => {
     const cols = [
@@ -29,15 +31,11 @@ export const DataTable = (props) => {
         type: 'boolean',
         renderCell: (params) => {
           return params.value ? (
-            <CheckBoxIcon
-              style={{
-                color: 'green',
-              }}
-            />
+            <CheckBoxIcon style={{ color: theme.palette.success.main }} />
           ) : (
             <CheckBoxOutlineBlankIcon
               style={{
-                color: 'grey',
+                color: theme.palette.grey[400],
               }}
             />
           );

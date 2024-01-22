@@ -10,11 +10,16 @@ import {
   YAxis,
 } from 'recharts';
 import * as d3 from 'd3';
+import { useTheme } from '@mui/material';
 
 export const Bars = (props) => {
+  const theme = useTheme();
   const { data } = props;
   const { selectedItem, setSelectedItem } = useData();
-  const myColor = d3.scaleLinear().domain([0, 20]).range(['#ddd', '#303099']);
+  const myColor = d3
+    .scaleLinear()
+    .domain([0, 20])
+    .range(['#fff', theme.palette.primary.main]);
 
   const handleClick = (d, i, e) => {
     if (selectedItem === d.userId) {
@@ -22,25 +27,6 @@ export const Bars = (props) => {
     } else {
       setSelectedItem(d.userId);
     }
-  };
-
-  const renderCustomizedLabel = (props) => {
-    const { x, y, width, height, value, offset, index } = props;
-
-    return (
-      <g>
-        <text
-          x={x}
-          y={y}
-          dx={index % 2 === 0 ? width - 50 : width + 8}
-          dy={height / 2 + offset}
-          fill={index % 2 === 0 ? '#fff' : '#111'}
-          textAnchor="start"
-        >
-          {value}
-        </text>
-      </g>
-    );
   };
 
   return (
@@ -56,16 +42,19 @@ export const Bars = (props) => {
         }}
       >
         <XAxis type="number" hide />
-        <YAxis dataKey="userId" type="category" interval={0} />
+        <YAxis
+          dataKey="userId"
+          type="category"
+          interval={0}
+          tick={{ fill: theme.palette.text.primary }}
+        />
         <Bar
           dataKey="count"
-          fill="#8884d8"
           onClick={handleClick}
           barSize={16}
           isAnimationActive={false}
         >
           <LabelList dataKey="count" position={'right'} />
-          {/* <LabelList dataKey="count" content={renderCustomizedLabel} /> */}
           {data.map((d, i) => (
             <Cell
               cursor="pointer"
