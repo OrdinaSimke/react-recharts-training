@@ -17,9 +17,12 @@ export const Bars = (props) => {
   const theme = useTheme();
   const { data } = props;
   const { locale, selectedItem, setSelectedItem } = useData();
+
+  const dataMax = Math.max(...data.map((o) => o.count));
+
   const myColor = d3
     .scaleLinear()
-    .domain([0, 20])
+    .domain([0, dataMax])
     .range(['#fff', theme.palette.primary.main]);
 
   const handleClick = (d, i, e) => {

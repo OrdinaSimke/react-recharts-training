@@ -42,6 +42,7 @@ export default function App() {
     return <LineChart ref={chartRef} data={data} width={500} height={400} />;
   }, [data]);
 
+  // see index.html in public
   /* global renders2:writable, timeStart2:writable */
 
   return (

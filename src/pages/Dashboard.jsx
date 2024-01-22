@@ -16,6 +16,7 @@ import { TopFilterBar } from 'components/TopFilterBar/TopFilterBar';
 import { BottomContent } from 'components/BottomContent/BorttomContent';
 import { D3App } from 'components/D3ExampleWrong/D3App';
 import D3AppCorrect from 'components/D3ExampleCorrect/D3AppCorrect';
+import { MapGemeenten } from 'components/Map/Map';
 
 // import { Lines } from 'components/Lines/Lines';
 // import { lineData } from 'data/data';
@@ -105,7 +106,12 @@ export const Dashboard = (props) => {
     if (todoData) {
       let sampleData = [];
       for (let i = 0; i < 120; i++) {
-        sampleData.push(pickRandomCell(todoData));
+        const tmp = pickRandomCell(todoData);
+        // Random number for province mapping
+        tmp.provId = Math.floor(Math.random() * 11) + 1;
+        // Fix for error in ID is geojson file (Id:10 is missing)
+        tmp.provId = tmp.provId === 10 ? 12 : tmp.provId;
+        sampleData.push(tmp);
       }
 
       const jsonObject = sampleData.map(JSON.stringify);
@@ -149,14 +155,15 @@ export const Dashboard = (props) => {
   useLayoutEffect(() => setHeight(container.current.clientHeight), [todoData]);
 
   // Conditional rendering
-  let bars;
-  let dataTable;
+  let bars, dataTable, mapBelgium;
   if (todoData) {
     bars = <Bars data={barData} />;
     dataTable = <DataTable data={tableData} />;
+    mapBelgium = <MapGemeenten data={tableData} />;
   } else {
     bars = <div>Data loading</div>;
     dataTable = <div>Data loading</div>;
+    mapBelgium = <div>Data loading</div>;
   }
 
   return (
@@ -203,12 +210,9 @@ export const Dashboard = (props) => {
                 </Paper>
               </Grid>
               <Grid item xs={12} md={6}>
-                <Typography variant="subtitle2">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                  blanditiis tenetur
-                </Typography>
-                <Paper elevation={0} sx={{ p: 2, height: '260px' }}>
+                <Paper elevation={0} sx={{ p: 0, height: '280px' }}>
                   {/* <Lines data={lineData} /> */}
+                  {mapBelgium}
                 </Paper>
               </Grid>
               <Grid item xs={12} md={12}>
