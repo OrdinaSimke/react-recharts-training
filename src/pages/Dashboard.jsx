@@ -14,6 +14,9 @@ import useSWR from 'swr';
 import { TopContent } from 'components/TopContent/TopContent';
 import { TopFilterBar } from 'components/TopFilterBar/TopFilterBar';
 import { BottomContent } from 'components/BottomContent/BorttomContent';
+import { D3App } from 'components/D3ExampleWrong/D3App';
+import D3AppCorrect from 'components/D3ExampleCorrect/D3AppCorrect';
+
 // import { Lines } from 'components/Lines/Lines';
 // import { lineData } from 'data/data';
 
@@ -40,8 +43,8 @@ export const Dashboard = (props) => {
   const container = useRef(null);
 
   // Drawer
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -223,6 +226,8 @@ export const Dashboard = (props) => {
       </Box>
 
       <BottomContent />
+      <D3App />
+      <D3AppCorrect />
     </>
   );
 };
