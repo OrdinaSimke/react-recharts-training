@@ -14,6 +14,8 @@ import useSWR from 'swr';
 import { TopContent } from 'components/TopContent/TopContent';
 import { TopFilterBar } from 'components/TopFilterBar/TopFilterBar';
 import { BottomContent } from 'components/BottomContent/BorttomContent';
+// import { Lines } from 'components/Lines/Lines';
+// import { lineData } from 'data/data';
 
 export const Dashboard = (props) => {
   const { drawerWidth } = useData();
@@ -203,7 +205,7 @@ export const Dashboard = (props) => {
                   blanditiis tenetur
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, height: '260px' }}>
-                  {/* {lines} */}
+                  {/* <Lines data={lineData} /> */}
                 </Paper>
               </Grid>
               <Grid item xs={12} md={12}>

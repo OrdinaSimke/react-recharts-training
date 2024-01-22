@@ -1,4 +1,4 @@
-export const data = [
+export const lineData = [
   {
     id: 0,
     name: 'Page A',

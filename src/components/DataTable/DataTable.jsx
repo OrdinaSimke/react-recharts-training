@@ -96,6 +96,25 @@ export const DataTable = (props) => {
           },
         },
       }}
+      sx={{
+        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar': {
+          width: '0.8em',
+          height: '0.8em',
+        },
+        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-track': {
+          background: '#f1f1f1',
+        },
+        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb': {
+          backgroundColor: '#888',
+        },
+        '& .MuiDataGrid-virtualScroller::-webkit-scrollbar-thumb:hover': {
+          background: '#555',
+        },
+        '& .MuiDataGrid-virtualScroller': {
+          // scrollbarColor: 'red blue',
+          scrollbarWidth: 'thin',
+        },
+      }}
     />
   );
 };
