@@ -41,7 +41,18 @@ export const Dashboard = (props) => {
     swrOptions
   );
 
-  useLayoutEffect(() => setHeight(container.current.clientHeight), [todoData]);
+ useEffect(() => {
+    const handleResize = () => {
+      setHeight(container.current.offsetHeight);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   // Drawer
   const [mobileOpen, setMobileOpen] = React.useState(false);
