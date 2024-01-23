@@ -18,6 +18,7 @@ import { D3App } from 'components/D3ExampleWrong/D3App';
 import D3AppCorrect from 'components/D3ExampleCorrect/D3AppCorrect';
 import { MapGemeenten } from 'components/Map/Map';
 import { FilterLine } from 'components/FilterLine/FilterLine';
+import BasicScatter from 'components/MUI_Scatter/MUI_Scatter';
 
 // import { Lines } from 'components/Lines/Lines';
 // import { lineData } from 'data/data';
@@ -241,6 +242,9 @@ export const Dashboard = (props) => {
       <BottomContent />
       <D3App />
       <D3AppCorrect />
+      <p>MUI Scatterplot (v7 unstable) - Voronoi tooltip (auto snap closest)</p>
+      <p>Still in development, so not much flexibility yet</p>
+      <BasicScatter />
     </>
   );
 };
