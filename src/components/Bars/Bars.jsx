@@ -26,20 +26,14 @@ export const Bars = (props) => {
     .range(['#fff', theme.palette.primary.main]);
 
   const handleClick = (d, i, e) => {
-    if (selectedItem === parseInt(d.userId)) {
-      setSelectedItem(null);
-    } else {
-      setSelectedItem(parseInt(d.userId));
-    }
+    setSelectedItem({ type: 'user', id: parseInt(d.userId) });
   };
 
   const handleClickTick = (d, i, e) => {
-    if (selectedItem === parseInt(d.value)) {
-      setSelectedItem(null);
-    } else {
-      setSelectedItem(parseInt(d.value));
-    }
+    setSelectedItem({ type: 'user', id: parseInt(d.value) });
   };
+
+  if (!data || data.length === 0) return <></>;
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -84,7 +78,8 @@ export const Bars = (props) => {
             <Cell
               cursor="pointer"
               fill={
-                parseInt(d.userId) === selectedItem
+                selectedItem.type === 'user' &&
+                selectedItem.id === parseInt(d.userId)
                   ? '#82ca9d'
                   : myColor(d.count)
               }

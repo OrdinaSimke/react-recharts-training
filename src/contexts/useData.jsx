@@ -5,7 +5,7 @@ import * as d3 from 'd3';
 const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState({ type: null, id: null });
   const drawerWidth = 240;
   const navbarHeight = 44;
   const locale = d3.formatLocale({

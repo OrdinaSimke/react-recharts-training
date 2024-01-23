@@ -1,15 +1,14 @@
 import React from 'react';
-
 import { ComposableMap, Geographies, Geography } from 'react-simple-maps';
-
 import useSWR from 'swr';
-
 // import geoData from '../../data/gemeenten.json';
 import Tooltip from '@mui/material/Tooltip';
 import * as d3 from 'd3';
-import { Typography, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
+import { useData } from 'contexts/useData';
 
 export const MapGemeenten = ({ data }) => {
+  const { selectedItem, setSelectedItem } = useData();
   const theme = useTheme();
   const fetcher = (url) => fetch(url).then((res) => res.json());
   const swrOptions = {};
@@ -36,6 +35,17 @@ export const MapGemeenten = ({ data }) => {
     return groupedData;
   };
 
+  const handleClick = (row, geo) => {
+    if (!row || row.length === 0) return;
+    let values = [...new Set(row.map((d) => parseInt(d['id'])))];
+    setSelectedItem({
+      type: 'prov',
+      id: values,
+      provId: row[0].provId,
+      prov: geo.NAME_2,
+    });
+  };
+
   if (!geoData) {
     return <></>;
   }
@@ -53,7 +63,14 @@ export const MapGemeenten = ({ data }) => {
         {({ geographies, projection, path }) =>
           geographies.map((geo, idx) => {
             const mapData = getMapData(data);
-            const currentData = mapData.find(
+            let currentData = mapData.find(
+              (d) => parseInt(d.provId) === parseInt(geo.properties.ID_2)
+            );
+            currentData = !currentData
+              ? { count: 0, provId: parseInt(geo.properties.ID_2) }
+              : currentData;
+
+            let currentRawData = data.filter(
               (d) => parseInt(d.provId) === parseInt(geo.properties.ID_2)
             );
 
@@ -65,10 +82,9 @@ export const MapGemeenten = ({ data }) => {
               .range(['#fff', theme.palette.secondary.main]);
 
             return (
-              // <Console log={geo.properties.n} />
               <Tooltip
                 enterTouchDelay={0}
-                title={`${geo.properties.NAME_2}: ${currentData.count}`}
+                title={`${geo.properties.NAME_2}: ${currentData?.count}`}
                 arrow
                 disableInteractive
                 key={idx}
@@ -76,9 +92,13 @@ export const MapGemeenten = ({ data }) => {
                 <Geography
                   key={geo.ID_2}
                   geography={geo}
+                  onClick={() => handleClick(currentRawData, geo.properties)}
                   fill={
                     currentData
-                      ? myColor(currentData.count)
+                      ? parseInt(currentData.provId) ===
+                        parseInt(selectedItem.provId)
+                        ? '#82ca9d'
+                        : myColor(currentData.count)
                       : theme.palette.background.default
                   }
                   stroke={'#ddd'}
@@ -88,12 +108,12 @@ export const MapGemeenten = ({ data }) => {
                       outline: 'none',
                     },
                     hover: {
-                      fill: '#aa3355',
+                      // fill: '#aa3355',
                       opacity: 1,
                       outline: 'none',
                     },
                     pressed: {
-                      fill: '#aa3355',
+                      // fill: '#aa3355',
                       opacity: 1,
                       outline: 'none',
                     },

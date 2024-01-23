@@ -68,13 +68,26 @@ export const DataTable = (props) => {
   }, []);
 
   useEffect(() => {
-    if (selectedItem !== null) {
+    if (selectedItem.type === null) {
+      setTableData(data);
+      return;
+    }
+
+    if (selectedItem.type === 'user') {
       const tmp = data.filter(
-        (d) => parseInt(d.userId) === parseInt(selectedItem)
+        (d) => parseInt(d.userId) === parseInt(selectedItem.id)
       );
       setTableData(tmp);
-    } else {
-      setTableData(data);
+      return;
+    }
+
+    if (selectedItem.type === 'prov') {
+      const tmp = data.filter((d) => {
+        const isHit = selectedItem.id.includes(parseInt(d.id));
+        return isHit;
+      });
+      setTableData(tmp);
+      return;
     }
   }, [data, selectedItem]);
 

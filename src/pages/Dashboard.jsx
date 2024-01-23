@@ -17,6 +17,7 @@ import { BottomContent } from 'components/BottomContent/BorttomContent';
 import { D3App } from 'components/D3ExampleWrong/D3App';
 import D3AppCorrect from 'components/D3ExampleCorrect/D3AppCorrect';
 import { MapGemeenten } from 'components/Map/Map';
+import { FilterLine } from 'components/FilterLine/FilterLine';
 
 // import { Lines } from 'components/Lines/Lines';
 // import { lineData } from 'data/data';
@@ -152,18 +153,25 @@ export const Dashboard = (props) => {
     }
   }, [completed, allData]);
 
-  useLayoutEffect(() => setHeight(container.current.clientHeight), [todoData]);
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(container.current.offsetHeight);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Conditional rendering
-  let bars, dataTable, mapBelgium;
+  let bars, dataTable, mapBelgium, filters;
   if (todoData) {
     bars = <Bars data={barData} />;
     dataTable = <DataTable data={tableData} />;
     mapBelgium = <MapGemeenten data={tableData} />;
-  } else {
-    bars = <div>Data loading</div>;
-    dataTable = <div>Data loading</div>;
-    mapBelgium = <div>Data loading</div>;
+    filters = <FilterLine />;
   }
 
   return (
@@ -203,7 +211,7 @@ export const Dashboard = (props) => {
             <Grid container spacing={6}>
               <Grid item xs={12} md={6}>
                 <Typography variant="subtitle2">
-                  Click on a bar to filter the table below
+                  Click on anything to filter the table below
                 </Typography>
                 <Paper elevation={0} sx={{ p: 2, height: '260px' }}>
                   {bars}
@@ -215,11 +223,12 @@ export const Dashboard = (props) => {
                   {mapBelgium}
                 </Paper>
               </Grid>
-              <Grid item xs={12} md={12}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos
-                  blanditiis tenetur
-                </Typography>
+              <Grid item xs={12} md={12} sx={{ pt: '0 !important' }}>
+                <Paper elevation={0} sx={{ p: 1, height: '40px' }}>
+                  {filters}
+                </Paper>
+              </Grid>
+              <Grid item xs={12} md={12} sx={{ pt: '8px !important' }}>
                 <Paper elevation={0} sx={{ p: 0, height: '360px' }}>
                   {dataTable}
                 </Paper>

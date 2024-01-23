@@ -37,7 +37,7 @@ export const HeaderBar = (props) => {
           Header bar
         </Typography>
         <IconButton
-          sx={{ ml: 1 }}
+          sx={{ ml: 'auto' }}
           onClick={colorMode.toggleColorMode}
           color="inherit"
         >
