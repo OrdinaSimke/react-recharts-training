@@ -25,7 +25,18 @@ export const Dashboard = (props) => {
   let container = useRef(null);
 
   let [height, setHeight] = useState(null);
-  useLayoutEffect(() => setHeight(container.current.clientHeight), []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(container.current.offsetHeight);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const [myData, setMyData] = useState([]);
 
