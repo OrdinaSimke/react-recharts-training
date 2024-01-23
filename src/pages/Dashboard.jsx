@@ -143,7 +143,18 @@ export const Dashboard = (props) => {
     }
   }, [completed, allData]);
 
-  useLayoutEffect(() => setHeight(container.current.clientHeight), [todoData]);
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(container.current.offsetHeight);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
 
   // Conditional rendering
   let bars;
